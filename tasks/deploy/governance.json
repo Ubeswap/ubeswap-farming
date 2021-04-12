@@ -1,0 +1,8 @@
+{
+  "TimelockCeloReserve": "0xaf34be7af832d3161d3ed7b7e8beb73bf2b7a6a5",
+  "TimelockCommunityGrowthFund": "0x272f0c21962bb563735eeaedf9f7bb6b8e173325",
+  "TimelockExecutiveCouncil": "0x235065294a1b706cfde8d623e254e26332595dd7",
+  "TimelockTreasury": "0xaff72bc463d3cae1e88218b6af0367c6e4aa065f",
+  "ReleaseUBE": "0xdf0857e15d10a7ceaa44b37d55529a05164019d7",
+  "UbeToken": "0x00be17672160ce7a7d5ca9de197037d449cd99be"
+}

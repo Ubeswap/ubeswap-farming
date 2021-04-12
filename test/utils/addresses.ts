@@ -1,0 +1,7 @@
+import { getAddress } from "ethers/lib/utils";
+
+export const ZERO = "0x0000000000000000000000000000000000000000";
+
+export const POLYCHAIN = "0xD2DDEFBc2943de379F00917fe8411F7d71580B77";
+export const VITALIK = "0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045";
+export const F2POOL = getAddress("0x829bd824b016326a401d083b33d092293333a830");

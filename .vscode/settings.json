@@ -1,0 +1,20 @@
+{
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.codeActionsOnSave": {
+    "source.fixAll": true
+  },
+  "mochaExplorer.files": "test/**/*.{j,t}s",
+  "mochaExplorer.fullTrace": true,
+  "mochaExplorer.exit": true,
+  "solidity.linter": "solhint",
+  "solidity.enableLocalNodeCompiler": false,
+  "solidity.compileUsingRemoteVersion": "v0.8.3+commit.8d00100c",
+  "solidity.packageDefaultDependenciesContractsDirectory": "",
+  "solidity.enabledAsYouTypeCompilationErrorCheck": true,
+  "solidity.validationDelay": 1500,
+  "solidity.packageDefaultDependenciesDirectory": "node_modules",
+  "solidity-va.deco.statevars": true,
+  "solidity-va.preview.markdown": false,
+  "typescript.tsdk": "node_modules/typescript/lib"
+}
