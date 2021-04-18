@@ -1,15 +1,10 @@
-import { DeployerFn, ISupportedChain, log } from "@ubeswap/hardhat-celo";
+import { DeployerFn, log } from "@ubeswap/hardhat-celo";
 import { DeployersMap } from "..";
-import { PoolManager__factory } from "../../../build/types/";
-import { UbeToken } from "../governance.json";
-import { addInitialLiquidity, IPairInfo } from "./addInitialLiquidity";
+import { PoolManager__factory } from "../../../build/types";
+import { loadPairs } from "../config";
 import { createPools as doCreatePools } from "./createPools";
 
-interface IResult {
-  pairs: readonly Pick<IPairInfo, "name" | "pairAddress">[];
-}
-
-export const createPools: DeployerFn<IResult> = async ({
+export const createPools: DeployerFn<{}> = async ({
   deployer,
   provider,
   getAddresses,
@@ -17,15 +12,10 @@ export const createPools: DeployerFn<IResult> = async ({
   const { PoolManager } = getAddresses<DeployersMap, "pool-manager">(
     "pool-manager"
   );
-  // Deploy initial liquidity
-  log("Adding initial liquidity...");
-  const { pairs } = await addInitialLiquidity({
-    chainId: (await deployer.getChainId()) as ISupportedChain,
-    ubeTokenAddress: UbeToken,
-    provider,
-  });
+
+  const pairs = await loadPairs(provider);
   console.log(
-    "Pairs to deploy:",
+    "Pools to deploy:",
     JSON.stringify(
       pairs.map((pair) => ({
         pair: pair.name,
@@ -46,7 +36,7 @@ export const createPools: DeployerFn<IResult> = async ({
   });
 
   // get the pool addresses
-  let poolAddressMap: Record<string, string> = {};
+  const poolAddressMap: Record<string, string> = {};
   for (const pair of pairs) {
     const { poolAddress } = await PoolManager__factory.connect(
       PoolManager as string,
@@ -57,6 +47,5 @@ export const createPools: DeployerFn<IResult> = async ({
 
   return {
     ...poolAddressMap,
-    pairs: pairs.map(({ name, pairAddress }) => ({ name, pairAddress })),
   };
 };

@@ -1,14 +1,16 @@
 import { makeDeployTask, ResultsMap } from "@ubeswap/hardhat-celo";
 import * as path from "path";
-import { deployPoolManager } from "./002_pool-manager";
-import { distributeTokens } from "./003_distribution";
-import { createPools } from "./004_create-pools";
+import { deployPoolManager } from "./001_pool-manager";
+import { deployMiningEscrow } from "./002_mining-escrow";
+import { createPools } from "./003_create-pools";
+import { seedUbe } from "./004_seed-ube";
 import { startFarming } from "./005_start-farming";
 
 const deployers = {
   "pool-manager": deployPoolManager,
-  distribution: distributeTokens,
+  "mining-escrow": deployMiningEscrow,
   "create-pools": createPools,
+  "seed-ube": seedUbe,
   "start-farming": startFarming,
 };
 

@@ -12,6 +12,13 @@ import { ChainId, CHAIN_INFO } from "@ubeswap/sdk";
 import { getAddress } from "ethers/lib/utils";
 import { OPERATOR } from "../deploy/config";
 
+export interface IOperator {
+  ledger: LedgerKit;
+  provider: Web3Provider;
+  address: string;
+  signer: JsonRpcSigner;
+}
+
 export class LedgerKit {
   private closed = false;
   private constructor(
@@ -37,13 +44,8 @@ export class LedgerKit {
     }
   }
 
-  public static async initOperator(): Promise<{
-    ledger: LedgerKit;
-    provider: Web3Provider;
-    address: string;
-    signer: JsonRpcSigner;
-  }> {
-    const ledger = await LedgerKit.init(ChainId.ALFAJORES, [0]);
+  public static async initOperator(chainId: ChainId): Promise<IOperator> {
+    const ledger = await LedgerKit.init(chainId, [0]);
     const provider = new Web3Provider(ledger.kit.web3.currentProvider as any);
     const rawAddress = ledger.wallet.getAccounts()[0];
     if (!rawAddress) {

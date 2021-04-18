@@ -1,8 +1,8 @@
-import { doTx } from "@ubeswap/hardhat-celo";
+import { doTx, log } from "@ubeswap/hardhat-celo";
 import { Signer } from "ethers";
 import { formatEther } from "ethers/lib/utils";
-import { PoolManager__factory } from "../../../build/types/";
-import { IPairInfo } from "./addInitialLiquidity";
+import { PoolManager__factory } from "../../../build/types";
+import { ILoadedPair } from "../config";
 
 export const createPools = async ({
   poolManagerAddress,
@@ -11,7 +11,7 @@ export const createPools = async ({
 }: {
   poolManagerAddress: string;
   deployer: Signer;
-  pairs: readonly IPairInfo[];
+  pairs: readonly ILoadedPair[];
 }): Promise<void> => {
   const poolManager = PoolManager__factory.connect(
     poolManagerAddress,
@@ -25,10 +25,10 @@ export const createPools = async ({
     );
   }
 
-  console.log(`Total weight: ${(await poolManager.totalWeight()).toString()}`);
+  log(`Total weight: ${(await poolManager.totalWeight()).toString()}`);
 
   for (const pair of pairs) {
-    console.log(
+    log(
       `Distribution for ${pair.name}: ${formatEther(
         await poolManager.computeAmountForPool(pair.pairAddress, 0)
       )} UBE`

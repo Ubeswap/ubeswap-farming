@@ -3,7 +3,11 @@ import "@nomiclabs/hardhat-solhint";
 import "@nomiclabs/hardhat-waffle";
 import "@typechain/hardhat";
 import "@ubeswap/hardhat-celo";
-import { fornoURLs, ICeloNetwork } from "@ubeswap/hardhat-celo";
+import {
+  additionalOutputSelection,
+  fornoURLs,
+  ICeloNetwork,
+} from "@ubeswap/hardhat-celo";
 import "dotenv/config";
 import "hardhat-abi-exporter";
 import "hardhat-gas-reporter";
@@ -34,15 +38,9 @@ export default {
     // except: []
   },
   defaultNetwork: "hardhat",
-  etherscan: {
-    // Your API key for Etherscan
-    // Obtain one at https://etherscan.io/
-    apiKey: process.env.ETHERSCAN_API_KEY,
-  },
   gasReporter: {
     enabled: process.env.REPORT_GAS ? true : false,
     currency: "USD",
-    coinmarketcap: process.env.COINMARKETCAP_API_KEY,
     excludeContracts: ["contracts/mocks/", "contracts/libraries/"],
   },
   networks: {
@@ -51,7 +49,7 @@ export default {
       accounts,
       chainId: ICeloNetwork.MAINNET,
       live: true,
-      gasPrice: 0.5 * 10 ** 9,
+      gasPrice: 2 * 10 ** 8,
       gas: 8000000,
     },
     alfajores: {
@@ -59,7 +57,7 @@ export default {
       accounts,
       chainId: ICeloNetwork.ALFAJORES,
       live: true,
-      gasPrice: 0.5 * 10 ** 9,
+      gasPrice: 2 * 10 ** 8,
       gas: 8000000,
     },
     hardhat: {
@@ -84,8 +82,12 @@ export default {
     settings: {
       optimizer: {
         enabled: true,
-        runs: 5000,
+        runs: 999999,
       },
+      metadata: {
+        useLiteralContent: true,
+      },
+      outputSelection: additionalOutputSelection,
     },
   },
   spdxLicenseIdentifier: {

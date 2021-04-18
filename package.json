@@ -30,7 +30,8 @@
     "celo"
   ],
   "scripts": {
-    "build": "hardhat compile",
+    "build": "hardhat compile && npm run metadata",
+    "metadata": "hardhat metadata:write --name PoolManager && hardhat metadata:write --name TokenAllocator && hardhat metadata:write --name HalveningReleaseSchedule && hardhat metadata:write --name ReleaseEscrow",
     "clean": "rm -fr build/",
     "console": "hardhat console",
     "test": "NODE_ENV=test hardhat test",
@@ -54,7 +55,7 @@
     "@types/ledgerhq__hw-transport-node-hid": "^4.22.2",
     "@types/mocha": "^8.2.2",
     "@types/node": "^14.14.37",
-    "@ubeswap/hardhat-celo": "^0.7.9",
+    "@ubeswap/hardhat-celo": "^0.9.0",
     "@ubeswap/sdk": "^2.1.0",
     "@ubeswap/solidity-create2-deployer": "^0.6.1",
     "chai": "^4.3.4",

@@ -1620,10 +1620,10 @@
     "@types/bn.js" "*"
     "@types/underscore" "*"
 
-"@ubeswap/hardhat-celo@^0.7.9":
-  version "0.7.9"
-  resolved "https://registry.yarnpkg.com/@ubeswap/hardhat-celo/-/hardhat-celo-0.7.9.tgz#ba28bff37e22639d3362dc1c224b1c0f3ea9f139"
-  integrity sha512-Vvz04LMSjwq1wcmOxMZmlDMXFNMXawSHJoVwiZRFTDOXFmowqNXFb9DtTotlB7QvLK9if4ratj20sA6s86eiTw==
+"@ubeswap/hardhat-celo@^0.9.0":
+  version "0.9.0"
+  resolved "https://registry.yarnpkg.com/@ubeswap/hardhat-celo/-/hardhat-celo-0.9.0.tgz#5734cdd20a078fe985ee2987bd4227b18fc0fc9c"
+  integrity sha512-sfCV1JuWXZey/fkKtmgX2ML8Rdbba9SPul2V+Nfpe/oNWCNnIZoAQpTZhJj9QklaCG5MFUR60E2dS0uXIcN1yA==
   dependencies:
     "@celo-tools/celo-ethers-wrapper" "^0.0.5"
     "@ubeswap/solidity-create2-deployer" "^0.6.1"

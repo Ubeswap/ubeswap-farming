@@ -5,7 +5,7 @@ import {
   IStartTime__factory,
   PoolManager__factory,
   TokenAllocator__factory,
-} from "../../../build/types/";
+} from "../../../build/types";
 import {
   allocCeloReserve,
   allocCGF,
@@ -13,9 +13,9 @@ import {
   allocLiquidityMining,
 } from "../config";
 import {
-  ReleaseUBE,
+  ReleaseUbe,
   TimelockCeloReserve,
-  TimelockCommunityGrowthFund,
+  TimelockCommunity,
   UbeToken,
 } from "../governance.json";
 
@@ -32,7 +32,7 @@ export const deployPoolManager: DeployerFn<IAddresses> = async ({
 }) => {
   // Get start time from ReleaseUBE
   const startTime = (
-    await IStartTime__factory.connect(ReleaseUBE, provider).startTime()
+    await IStartTime__factory.connect(ReleaseUbe, provider).startTime()
   ).toNumber();
 
   console.log(
@@ -95,10 +95,7 @@ export const deployPoolManager: DeployerFn<IAddresses> = async ({
   );
   await doTx(
     `Add CGF as beneficiary for ${formatEther(allocCGF)} shares`,
-    miningAllocatorContract.addBeneficiary(
-      TimelockCommunityGrowthFund,
-      allocCGF
-    )
+    miningAllocatorContract.addBeneficiary(TimelockCommunity, allocCGF)
   );
   await doTx(
     `Add Celo Reserve as beneficiary for ${formatEther(

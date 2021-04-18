@@ -4,20 +4,23 @@ import {
   PoolManager__factory,
   ReleaseEscrow__factory,
 } from "../../../build/types/";
-import { TimelockExecutiveCouncil } from "../governance.json";
+import { loadPairs } from "../config";
+import { TimelockExecutive } from "../governance.json";
 
 /**
  * This task should be run after rewards.
  */
 export const startFarming: DeployerFn<{}> = async ({
   deployer,
+  provider,
   getAddresses,
 }) => {
-  const { PoolManager, MiningReleaseEscrow, pairs } = getAddresses<
+  const { PoolManager, MiningReleaseEscrow } = getAddresses<
     DeployersMap,
-    "distribution" | "pool-manager" | "create-pools"
-  >("distribution", "pool-manager", "create-pools");
+    "mining-escrow" | "pool-manager"
+  >("mining-escrow", "pool-manager");
 
+  const pairs = await loadPairs(provider);
   const poolManager = PoolManager__factory.connect(PoolManager, deployer);
 
   await doTx(
@@ -30,8 +33,8 @@ export const startFarming: DeployerFn<{}> = async ({
   );
 
   await doTx(
-    "Hand off PoolManager ownership to the Executive Council",
-    poolManager.transferOwnership(TimelockExecutiveCouncil)
+    "Hand off PoolManager ownership to the Executive Timelock",
+    poolManager.transferOwnership(TimelockExecutive)
   );
 
   return {};
