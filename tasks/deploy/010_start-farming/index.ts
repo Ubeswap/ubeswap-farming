@@ -3,8 +3,8 @@ import { DeployersMap } from "..";
 import {
   PoolManager__factory,
   ReleaseEscrow__factory,
-} from "../../../build/types/";
-import { loadPairs } from "../config";
+} from "../../../build/types";
+import { loadPairs, OPERATOR } from "../config";
 import { TimelockExecutive } from "../governance.json";
 
 /**
@@ -30,6 +30,11 @@ export const startFarming: DeployerFn<{}> = async ({
   await doTx(
     "Initialize period",
     poolManager.initializePeriod(pairs.map((pair) => pair.pairAddress))
+  );
+
+  await doTx(
+    "Make the Operator the Operator",
+    poolManager.setOperator(OPERATOR)
   );
 
   await doTx(

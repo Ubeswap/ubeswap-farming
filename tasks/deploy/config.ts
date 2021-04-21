@@ -3,7 +3,8 @@ import { ChainId, Fetcher, Pair, Token } from "@ubeswap/sdk";
 import { ethers } from "ethers";
 import { parseEther } from "ethers/lib/utils";
 import { ERC20__factory, IERC20, IERC20__factory } from "../../build/types";
-import { tokenAddresses } from "../lib/tokenAddresses";
+import { ITokenName, tokenAddresses } from "../lib/tokenAddresses";
+import { ILoadedPairWithWeight, loadPair } from "../lib/updatePoolWeights";
 import { UbeToken } from "./governance.json";
 
 /**
@@ -66,7 +67,7 @@ export const weights = [
     tokenB: "mcUSD",
     weight: 5,
   },
-];
+] as const;
 
 // ----------------------------------------------------------------
 // Computed values
@@ -80,80 +81,30 @@ export const allocCGF = parseEther(ALLOC_CGF.toString());
 export const allocCeloReserve = parseEther(ALLOC_CELO_RESERVE.toString());
 export const allocMined = parseEther(ALLOC_MINED.toString());
 
-const loadTokenData = async (
-  address: string,
-  provider: ethers.providers.BaseProvider
-) => {
-  const token = ERC20__factory.connect(address, provider);
-  return {
-    token: await Fetcher.fetchTokenData(
-      ((await provider.detectNetwork()).chainId as unknown) as ChainId,
-      address,
-      provider,
-      await token.symbol(),
-      await token.name()
-    ),
-    contract: token,
-  };
-};
-
-export interface ILoadedPair {
-  tokenA: { token: Token; contract: IERC20 };
-  tokenB: { token: Token; contract: IERC20 };
-  tokenAName: string;
-  tokenBName: string;
-  pairAddress: string;
-  weight: number;
-  name: string;
+export interface ILaunchPair extends ILoadedPairWithWeight {
   initialLiquidityA?: string;
   initialLiquidityB?: string;
 }
 
 export const loadPairs = async (
   provider: ethers.providers.BaseProvider
-): Promise<readonly ILoadedPair[]> => {
+): Promise<readonly ILaunchPair[]> => {
   const chainId = ((await provider.detectNetwork())
     .chainId as unknown) as ChainId;
   if (chainId === ChainId.BAKLAVA) {
     throw new Error("invalid chain");
   }
-
-  const getTokenByName = async (
-    name: string
-  ): Promise<{ token: Token; contract: IERC20 }> => {
-    if (name === "UBE") {
-      return await loadTokenData(UbeToken, provider);
-    }
-    const address = tokenAddresses[name]?.[chainId];
-    if (!address) {
-      throw new Error(`Could not find token: ${name}`);
-    }
-    return await loadTokenData(address, provider);
-  };
-
-  return Promise.all(
-    weights.map(
-      async ({
-        tokenA: tokenAName,
-        tokenB: tokenBName,
-        weight,
-        initialLiquidityA,
-        initialLiquidityB,
-      }) => {
-        const tokenA = await getTokenByName(tokenAName);
-        const tokenB = await getTokenByName(tokenBName);
-        return {
-          tokenA,
-          tokenB,
-          tokenAName,
-          tokenBName,
-          pairAddress: Pair.getAddress(tokenA.token, tokenB.token),
-          weight,
-          name: `${tokenAName}-${tokenBName}`,
-          initialLiquidityA,
-          initialLiquidityB,
-        };
-      }
-    )
+  return await Promise.all(
+    weights.map(async (pair) => {
+      const p = await loadPair({ provider, pair });
+      return {
+        ...p,
+        weight: pair.weight,
+        initialLiquidityA:
+          "initialLiquidityA" in pair ? pair.initialLiquidityA : undefined,
+        initialLiquidityB:
+          "initialLiquidityB" in pair ? pair.initialLiquidityB : undefined,
+      };
+    })
   );
 };

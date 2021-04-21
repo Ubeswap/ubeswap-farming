@@ -4,13 +4,15 @@ import { deployPoolManager } from "./001_pool-manager";
 import { deployMiningEscrow } from "./002_mining-escrow";
 import { createPools } from "./003_create-pools";
 import { seedUbe } from "./004_seed-ube";
-import { startFarming } from "./005_start-farming";
+import { updatePools0420 } from "./005_pool-updates";
+import { startFarming } from "./010_start-farming";
 
 const deployers = {
   "pool-manager": deployPoolManager,
   "mining-escrow": deployMiningEscrow,
   "create-pools": createPools,
   "seed-ube": seedUbe,
+  "update-pools-0420": updatePools0420,
   "start-farming": startFarming,
 };
 

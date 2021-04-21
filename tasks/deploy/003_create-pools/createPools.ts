@@ -2,7 +2,7 @@ import { doTx, log } from "@ubeswap/hardhat-celo";
 import { Signer } from "ethers";
 import { formatEther } from "ethers/lib/utils";
 import { PoolManager__factory } from "../../../build/types";
-import { ILoadedPair } from "../config";
+import { ILaunchPair } from "../config";
 
 export const createPools = async ({
   poolManagerAddress,
@@ -11,7 +11,7 @@ export const createPools = async ({
 }: {
   poolManagerAddress: string;
   deployer: Signer;
-  pairs: readonly ILoadedPair[];
+  pairs: readonly ILaunchPair[];
 }): Promise<void> => {
   const poolManager = PoolManager__factory.connect(
     poolManagerAddress,
