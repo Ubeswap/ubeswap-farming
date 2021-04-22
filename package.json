@@ -31,7 +31,7 @@
   ],
   "scripts": {
     "build": "hardhat compile && npm run metadata",
-    "metadata": "hardhat metadata:write --name PoolManager && hardhat metadata:write --name TokenAllocator && hardhat metadata:write --name HalveningReleaseSchedule && hardhat metadata:write --name ReleaseEscrow",
+    "metadata": "hardhat metadata:write --name PoolManager && hardhat metadata:write --name TokenAllocator && hardhat metadata:write --name HalveningReleaseSchedule && hardhat metadata:write --name ReleaseEscrow && hardhat metadata:write --name StakingRewards && prettier --write build/metadata/",
     "clean": "rm -fr build/",
     "console": "hardhat console",
     "test": "NODE_ENV=test hardhat test",
