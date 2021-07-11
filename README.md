@@ -1,6 +1,6 @@
-# Ubeswap Farming
+# Tradegen Farming
 
-Contracts for distributing Ube rewards.
+Contracts for distributing TGEN rewards.
 
 ## Deployment
 
