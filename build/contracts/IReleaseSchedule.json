@@ -1,0 +1,470 @@
+{
+  "contractName": "IReleaseSchedule",
+  "abi": [
+    {
+      "inputs": [],
+      "name": "totalPeriods",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_periodIndex",
+          "type": "uint256"
+        }
+      ],
+      "name": "getTokensForPeriod",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    }
+  ],
+  "metadata": "{\"compiler\":{\"version\":\"0.8.3+commit.8d00100c\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_periodIndex\",\"type\":\"uint256\"}],\"name\":\"getTokensForPeriod\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"totalPeriods\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{\"getTokensForPeriod(uint256)\":{\"notice\":\"Gets the tokens scheduled to be released for a period.\"},\"totalPeriods()\":{\"notice\":\"Total number of periods until there are no more tokens.\"}},\"notice\":\"A token release schedule defined by discrete periods.\",\"version\":1}},\"settings\":{\"compilationTarget\":{\"/C/Users/xavie/OneDrive/Desktop/TradeGen/Github/tradegen-farming/contracts/interfaces/IReleaseSchedule.sol\":\"IReleaseSchedule\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"/C/Users/xavie/OneDrive/Desktop/TradeGen/Github/tradegen-farming/contracts/interfaces/IReleaseSchedule.sol\":{\"keccak256\":\"0xe2ce2cbf151f4b764b4fcecdd337d404afd39683be3e30f1837b4849c9b724c7\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://f84cb61d016c97cda497fd3017c29a8349397babde8a796cef2444676446983d\",\"dweb:/ipfs/QmWgZvhYN5j1kwobWQ8kWF8qhVBJUJiM3oz4yNhhLbLYTg\"]}},\"version\":1}",
+  "bytecode": "0x",
+  "deployedBytecode": "0x",
+  "immutableReferences": {},
+  "generatedSources": [],
+  "deployedGeneratedSources": [],
+  "sourceMap": "",
+  "deployedSourceMap": "",
+  "source": "// SPDX-License-Identifier: MIT\r\n\r\npragma solidity ^0.8.3;\r\n\r\n/**\r\n * A token release schedule defined by discrete periods.\r\n */\r\ninterface IReleaseSchedule {\r\n    /**\r\n     * Total number of periods until there are no more tokens.\r\n     */\r\n    function totalPeriods() external view returns (uint256);\r\n\r\n    /**\r\n     * Gets the tokens scheduled to be released for a period.\r\n     */\r\n    function getTokensForPeriod(uint256 _periodIndex)\r\n        external\r\n        view\r\n        returns (uint256);\r\n}\r\n",
+  "sourcePath": "C:\\Users\\xavie\\OneDrive\\Desktop\\TradeGen\\Github\\tradegen-farming\\contracts\\interfaces\\IReleaseSchedule.sol",
+  "ast": {
+    "absolutePath": "/C/Users/xavie/OneDrive/Desktop/TradeGen/Github/tradegen-farming/contracts/interfaces/IReleaseSchedule.sol",
+    "exportedSymbols": {
+      "IReleaseSchedule": [
+        1464
+      ]
+    },
+    "id": 1465,
+    "license": "MIT",
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 1448,
+        "literals": [
+          "solidity",
+          "^",
+          "0.8",
+          ".3"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "35:23:6"
+      },
+      {
+        "abstract": false,
+        "baseContracts": [],
+        "contractDependencies": [],
+        "contractKind": "interface",
+        "documentation": {
+          "id": 1449,
+          "nodeType": "StructuredDocumentation",
+          "src": "62:66:6",
+          "text": " A token release schedule defined by discrete periods."
+        },
+        "fullyImplemented": false,
+        "id": 1464,
+        "linearizedBaseContracts": [
+          1464
+        ],
+        "name": "IReleaseSchedule",
+        "nameLocation": "140:16:6",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "documentation": {
+              "id": 1450,
+              "nodeType": "StructuredDocumentation",
+              "src": "164:76:6",
+              "text": " Total number of periods until there are no more tokens."
+            },
+            "functionSelector": "fea708f6",
+            "id": 1455,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "totalPeriods",
+            "nameLocation": "255:12:6",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 1451,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "267:2:6"
+            },
+            "returnParameters": {
+              "id": 1454,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 1453,
+                  "mutability": "mutable",
+                  "name": "",
+                  "nameLocation": "-1:-1:-1",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 1455,
+                  "src": "293:7:6",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 1452,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "293:7:6",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "292:9:6"
+            },
+            "scope": 1464,
+            "src": "246:56:6",
+            "stateMutability": "view",
+            "virtual": false,
+            "visibility": "external"
+          },
+          {
+            "documentation": {
+              "id": 1456,
+              "nodeType": "StructuredDocumentation",
+              "src": "310:75:6",
+              "text": " Gets the tokens scheduled to be released for a period."
+            },
+            "functionSelector": "6fc313e7",
+            "id": 1463,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "getTokensForPeriod",
+            "nameLocation": "400:18:6",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 1459,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 1458,
+                  "mutability": "mutable",
+                  "name": "_periodIndex",
+                  "nameLocation": "427:12:6",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 1463,
+                  "src": "419:20:6",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 1457,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "419:7:6",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "418:22:6"
+            },
+            "returnParameters": {
+              "id": 1462,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 1461,
+                  "mutability": "mutable",
+                  "name": "",
+                  "nameLocation": "-1:-1:-1",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 1463,
+                  "src": "491:7:6",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 1460,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "491:7:6",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "490:9:6"
+            },
+            "scope": 1464,
+            "src": "391:109:6",
+            "stateMutability": "view",
+            "virtual": false,
+            "visibility": "external"
+          }
+        ],
+        "scope": 1465,
+        "src": "130:373:6"
+      }
+    ],
+    "src": "35:470:6"
+  },
+  "legacyAST": {
+    "absolutePath": "/C/Users/xavie/OneDrive/Desktop/TradeGen/Github/tradegen-farming/contracts/interfaces/IReleaseSchedule.sol",
+    "exportedSymbols": {
+      "IReleaseSchedule": [
+        1464
+      ]
+    },
+    "id": 1465,
+    "license": "MIT",
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 1448,
+        "literals": [
+          "solidity",
+          "^",
+          "0.8",
+          ".3"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "35:23:6"
+      },
+      {
+        "abstract": false,
+        "baseContracts": [],
+        "contractDependencies": [],
+        "contractKind": "interface",
+        "documentation": {
+          "id": 1449,
+          "nodeType": "StructuredDocumentation",
+          "src": "62:66:6",
+          "text": " A token release schedule defined by discrete periods."
+        },
+        "fullyImplemented": false,
+        "id": 1464,
+        "linearizedBaseContracts": [
+          1464
+        ],
+        "name": "IReleaseSchedule",
+        "nameLocation": "140:16:6",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "documentation": {
+              "id": 1450,
+              "nodeType": "StructuredDocumentation",
+              "src": "164:76:6",
+              "text": " Total number of periods until there are no more tokens."
+            },
+            "functionSelector": "fea708f6",
+            "id": 1455,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "totalPeriods",
+            "nameLocation": "255:12:6",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 1451,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "267:2:6"
+            },
+            "returnParameters": {
+              "id": 1454,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 1453,
+                  "mutability": "mutable",
+                  "name": "",
+                  "nameLocation": "-1:-1:-1",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 1455,
+                  "src": "293:7:6",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 1452,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "293:7:6",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "292:9:6"
+            },
+            "scope": 1464,
+            "src": "246:56:6",
+            "stateMutability": "view",
+            "virtual": false,
+            "visibility": "external"
+          },
+          {
+            "documentation": {
+              "id": 1456,
+              "nodeType": "StructuredDocumentation",
+              "src": "310:75:6",
+              "text": " Gets the tokens scheduled to be released for a period."
+            },
+            "functionSelector": "6fc313e7",
+            "id": 1463,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "getTokensForPeriod",
+            "nameLocation": "400:18:6",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 1459,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 1458,
+                  "mutability": "mutable",
+                  "name": "_periodIndex",
+                  "nameLocation": "427:12:6",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 1463,
+                  "src": "419:20:6",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 1457,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "419:7:6",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "418:22:6"
+            },
+            "returnParameters": {
+              "id": 1462,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 1461,
+                  "mutability": "mutable",
+                  "name": "",
+                  "nameLocation": "-1:-1:-1",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 1463,
+                  "src": "491:7:6",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 1460,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "491:7:6",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "490:9:6"
+            },
+            "scope": 1464,
+            "src": "391:109:6",
+            "stateMutability": "view",
+            "virtual": false,
+            "visibility": "external"
+          }
+        ],
+        "scope": 1465,
+        "src": "130:373:6"
+      }
+    ],
+    "src": "35:470:6"
+  },
+  "compiler": {
+    "name": "solc",
+    "version": "0.8.3+commit.8d00100c.Emscripten.clang"
+  },
+  "networks": {},
+  "schemaVersion": "3.4.1",
+  "updatedAt": "2021-07-12T00:22:57.897Z",
+  "devdoc": {
+    "kind": "dev",
+    "methods": {},
+    "version": 1
+  },
+  "userdoc": {
+    "kind": "user",
+    "methods": {
+      "getTokensForPeriod(uint256)": {
+        "notice": "Gets the tokens scheduled to be released for a period."
+      },
+      "totalPeriods()": {
+        "notice": "Total number of periods until there are no more tokens."
+      }
+    },
+    "notice": "A token release schedule defined by discrete periods.",
+    "version": 1
+  }
+}
