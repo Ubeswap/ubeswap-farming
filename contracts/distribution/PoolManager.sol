@@ -4,6 +4,7 @@ pragma solidity ^0.8.3;
 
 import "../openzeppelin-solidity/contracts/Ownable.sol";
 import "../synthetix/contracts/StakingRewards.sol";
+import "../synthetix/contracts/interfaces/IERC20.sol";
 
 import "../utils/Operator.sol";
 import "../interfaces/ITokenAllocator.sol";
@@ -23,7 +24,7 @@ import "../interfaces/IReleaseSchedule.sol";
  *   4. Complete the period initialization using `commitInitializePeriod`.
  */
 contract PoolManager is Operator, ReentrancyGuard {
-    using SafeERC20 for IERC20;
+    
     using SafeMath for uint256;
 
     struct PoolInfo {
@@ -250,7 +251,7 @@ contract PoolManager is Operator, ReentrancyGuard {
         rewardsToken.approve(poolInfo.poolAddress, amountToStake);
 
         // Deploy the tokens into the pool
-        rewardsToken.safeTransfer(poolInfo.poolAddress, amountToStake);
+        rewardsToken.transfer(poolInfo.poolAddress, amountToStake);
         RewardsDistributionRecipient(poolInfo.poolAddress).notifyRewardAmount(
             amountToStake
         );
@@ -306,6 +307,6 @@ contract PoolManager is Operator, ReentrancyGuard {
     ) external onlyOperator {
         // Allow the operator to recover any ERC20 tokens stuck in the pool.
         StakingRewards(_pool).recoverERC20(_tokenAddress, _tokenAmount);
-        IERC20(_tokenAddress).safeTransfer(msg.sender, _tokenAmount);
+        IERC20(_tokenAddress).transfer(msg.sender, _tokenAmount);
     }
 }

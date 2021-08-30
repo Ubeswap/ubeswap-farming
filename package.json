@@ -1,23 +1,45 @@
 {
-  "name": "tradegen-farming",
+  "name": "@tradegen/tradegen-farming",
   "version": "1.0.0",
-  "description": "",
-  "main": "celo_deploy.js",
-  "directories": {
-    "test": "test"
+  "license": "MIT",
+  "description": "Tradegen Farming contracts",
+  "files": [
+    "build/abi/",
+    "build/artifacts/",
+    "contracts/",
+    "deployments/",
+    "package.json"
+  ],
+  "scripts": {
+    "build": "hardhat compile && npm run",
+    "console": "hardhat console",
+    "test": "hardhat test"
+  },
+  "devDependencies": {
+    "@celo/contractkit": "^1.1.0",
+    "@celo/wallet-ledger": "^1.1.0",
+    "@ledgerhq/hw-transport-node-hid": "^5.48.0",
+    "@nomiclabs/hardhat-ethers": "^2.0.2",
+    "@nomiclabs/hardhat-solhint": "^2.0.0",
+    "@nomiclabs/hardhat-waffle": "^2.0.1",
+    "@ubeswap/hardhat-celo": "^0.9.0",
+    "@ubeswap/sdk": "^2.1.0",
+    "@ubeswap/solidity-create2-deployer": "^0.6.1",
+    "chai": "^4.3.4",
+    "dotenv": "^8.2.0",
+    "ethereum-waffle": "^3.3.0",
+    "hardhat": "^2.1.2",
+    "hardhat-abi-exporter": "^2.2.0",
+    "hardhat-gas-reporter": "^1.0.4",
+    "hardhat-preprocessor": "^0.1.2",
+    "hardhat-spdx-license-identifier": "^2.0.3",
+    "mocha": "^9.1.0",
+    "web3": "^1.3.5"
+  },
+  "resolutions": {
+    "ethers": "5.0.31"
   },
   "dependencies": {
-    "@celo/contractkit": "^1.2.0",
-    "assert": "^2.0.0",
-    "bignumber": "^1.1.0",
-    "mocha": "^9.0.1",
-    "truffle": "^5.4.0",
-    "web3": "^1.3.6"
-  },
-  "scripts": {
-    "test": "mocha --timeout 180000"
-  },
-  "devDependencies": {},
-  "author": "",
-  "license": "ISC"
+    "hardhat-truffle4": "^1.0.1"
+  }
 }
