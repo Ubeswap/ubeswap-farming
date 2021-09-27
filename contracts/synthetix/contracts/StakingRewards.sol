@@ -31,7 +31,8 @@ contract StakingRewards is IStakingRewards, RewardsDistributionRecipient, Reentr
     mapping(address => uint256) public userRewardPerTokenPaid;
     mapping(address => uint256) public rewards;
 
-    uint256 private _totalSupply;
+    uint256 public override totalSupply;
+    uint256 private _weightedTotalSupply;
     mapping(address => uint256[4]) private _balances;
     mapping(address => uint256) private _weightedBalance;
 
@@ -53,10 +54,6 @@ contract StakingRewards is IStakingRewards, RewardsDistributionRecipient, Reentr
 
     /* ========== VIEWS ========== */
 
-    function totalSupply() external view override returns (uint256) {
-        return _totalSupply;
-    }
-
     function balanceOf(address account, uint256 tokenClass) external view override returns (uint256) {
         require(tokenClass > 0 && tokenClass < 5, "Token class must be between 1 and 4");
 
@@ -68,12 +65,12 @@ contract StakingRewards is IStakingRewards, RewardsDistributionRecipient, Reentr
     }
 
     function rewardPerToken() public view override returns (uint256) {
-        if (_totalSupply == 0) {
+        if (_weightedTotalSupply == 0) {
             return rewardPerTokenStored;
         }
         return
             rewardPerTokenStored.add(
-                lastTimeRewardApplicable().sub(lastUpdateTime).mul(rewardRate).mul(1e18).div(_totalSupply)
+                lastTimeRewardApplicable().sub(lastUpdateTime).mul(rewardRate).mul(1e18).div(_weightedTotalSupply)
             );
     }
 
@@ -90,12 +87,18 @@ contract StakingRewards is IStakingRewards, RewardsDistributionRecipient, Reentr
     function stake(uint256 amount, uint256 tokenClass) external override nonReentrant updateReward(msg.sender) {
         require(amount > 0, "Cannot stake 0");
         require(tokenClass > 0 && tokenClass < 5, "Token class must be between 1 and 4");
+        require(stakingToken.balanceOf(msg.sender, tokenClass) >= amount, "Not enough tokens");
 
         uint256 weightedAmount = amount.mul(WEIGHTS[tokenClass - 1]);
-        _totalSupply = _totalSupply.add(weightedAmount);
+        totalSupply = totalSupply.add(amount);
+        _weightedTotalSupply = _weightedTotalSupply.add(weightedAmount);
         _weightedBalance[msg.sender] = _weightedBalance[msg.sender].add(weightedAmount);
         _balances[msg.sender][tokenClass - 1] = _balances[msg.sender][tokenClass - 1].add(amount);
-        stakingToken.transfer(msg.sender, address(this), tokenClass, amount);
+
+        bool result = stakingToken.transfer(msg.sender, address(this), tokenClass, amount);
+
+        require(result, "Transfer failed");
+
         emit Staked(msg.sender, tokenClass, amount);
     }
 
@@ -104,10 +107,15 @@ contract StakingRewards is IStakingRewards, RewardsDistributionRecipient, Reentr
         require(tokenClass > 0 && tokenClass < 5, "Token class must be between 1 and 4");
 
         uint256 weightedAmount = amount.mul(WEIGHTS[tokenClass - 1]);
-        _totalSupply = _totalSupply.sub(weightedAmount);
+        totalSupply = totalSupply.sub(amount);
+        _weightedTotalSupply = _weightedTotalSupply.sub(weightedAmount);
         _weightedBalance[msg.sender] = _weightedBalance[msg.sender].sub(weightedAmount);
         _balances[msg.sender][tokenClass - 1] = _balances[msg.sender][tokenClass - 1].sub(amount);
-        stakingToken.transfer(address(this), msg.sender, tokenClass, amount);
+
+        bool result = stakingToken.transfer(address(this), msg.sender, tokenClass, amount);
+
+        require(result, "Transfer failed");
+
         emit Withdrawn(msg.sender, tokenClass, amount);
     }
 
