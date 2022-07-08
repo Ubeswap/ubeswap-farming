@@ -5,24 +5,23 @@ pragma solidity ^0.8.3;
 
 import "../../openzeppelin-solidity/contracts/Math.sol";
 import "../../openzeppelin-solidity/contracts/SafeMath.sol";
-import "../../openzeppelin-solidity/contracts/SafeERC20.sol";
 import "../../openzeppelin-solidity/contracts/ReentrancyGuard.sol";
 
 // Inheritance
 import "./interfaces/IStakingRewards.sol";
 import "./RewardsDistributionRecipient.sol";
 
+//Interfaces
+import "./interfaces/IERC20.sol";
+import "./interfaces/ISellable.sol";
 
-// https://docs.synthetix.io/contracts/source/contracts/stakingrewards
-// XXX: removed Pausable
 contract StakingRewards is IStakingRewards, RewardsDistributionRecipient, ReentrancyGuard {
     using SafeMath for uint256;
-    using SafeERC20 for IERC20;
 
     /* ========== STATE VARIABLES ========== */
 
     IERC20 public rewardsToken;
-    IERC20 public stakingToken;
+    ISellable public stakingToken;
     uint256 public periodFinish = 0;
     uint256 public rewardRate = 0;
     uint256 public rewardsDuration = 7 days;
@@ -32,8 +31,13 @@ contract StakingRewards is IStakingRewards, RewardsDistributionRecipient, Reentr
     mapping(address => uint256) public userRewardPerTokenPaid;
     mapping(address => uint256) public rewards;
 
-    uint256 private _totalSupply;
-    mapping(address => uint256) private _balances;
+    uint256 public override totalSupply;
+    uint256 private _weightedTotalSupply;
+    mapping(address => uint256[4]) private _balances;
+    mapping(address => uint256) private _weightedBalance;
+
+    //Weights per token class
+    uint256[4] public WEIGHTS = [65, 20, 10, 5];
 
     /* ========== CONSTRUCTOR ========== */
 
@@ -44,18 +48,16 @@ contract StakingRewards is IStakingRewards, RewardsDistributionRecipient, Reentr
         address _stakingToken
     ) Owned(_owner) {
         rewardsToken = IERC20(_rewardsToken);
-        stakingToken = IERC20(_stakingToken);
+        stakingToken = ISellable(_stakingToken);
         rewardsDistribution = _rewardsDistribution;
     }
 
     /* ========== VIEWS ========== */
 
-    function totalSupply() external view override returns (uint256) {
-        return _totalSupply;
-    }
+    function balanceOf(address account, uint256 tokenClass) external view override returns (uint256) {
+        require(tokenClass > 0 && tokenClass < 5, "Token class must be between 1 and 4");
 
-    function balanceOf(address account) external view override returns (uint256) {
-        return _balances[account];
+        return _balances[account][tokenClass - 1];
     }
 
     function lastTimeRewardApplicable() public view override returns (uint256) {
@@ -63,17 +65,17 @@ contract StakingRewards is IStakingRewards, RewardsDistributionRecipient, Reentr
     }
 
     function rewardPerToken() public view override returns (uint256) {
-        if (_totalSupply == 0) {
+        if (_weightedTotalSupply == 0) {
             return rewardPerTokenStored;
         }
         return
             rewardPerTokenStored.add(
-                lastTimeRewardApplicable().sub(lastUpdateTime).mul(rewardRate).mul(1e18).div(_totalSupply)
+                lastTimeRewardApplicable().sub(lastUpdateTime).mul(rewardRate).mul(1e18).div(_weightedTotalSupply)
             );
     }
 
     function earned(address account) public view override returns (uint256) {
-        return _balances[account].mul(rewardPerToken().sub(userRewardPerTokenPaid[account])).div(1e18).add(rewards[account]);
+        return _weightedBalance[account].mul(rewardPerToken().sub(userRewardPerTokenPaid[account])).div(1e18).add(rewards[account]);
     }
 
     function getRewardForDuration() external view override returns (uint256) {
@@ -82,34 +84,59 @@ contract StakingRewards is IStakingRewards, RewardsDistributionRecipient, Reentr
 
     /* ========== MUTATIVE FUNCTIONS ========== */
 
-    // XXX: removed notPaused
-    function stake(uint256 amount) external override nonReentrant updateReward(msg.sender) {
+    function stake(uint256 amount, uint256 tokenClass) external override nonReentrant updateReward(msg.sender) {
         require(amount > 0, "Cannot stake 0");
-        _totalSupply = _totalSupply.add(amount);
-        _balances[msg.sender] = _balances[msg.sender].add(amount);
-        stakingToken.safeTransferFrom(msg.sender, address(this), amount);
-        emit Staked(msg.sender, amount);
+        require(tokenClass > 0 && tokenClass < 5, "Token class must be between 1 and 4");
+        require(stakingToken.balanceOf(msg.sender, tokenClass) >= amount, "Not enough tokens");
+
+        uint256 weightedAmount = amount.mul(WEIGHTS[tokenClass - 1]);
+        totalSupply = totalSupply.add(amount);
+        _weightedTotalSupply = _weightedTotalSupply.add(weightedAmount);
+        _weightedBalance[msg.sender] = _weightedBalance[msg.sender].add(weightedAmount);
+        _balances[msg.sender][tokenClass - 1] = _balances[msg.sender][tokenClass - 1].add(amount);
+
+        bool result = stakingToken.transfer(msg.sender, address(this), tokenClass, amount);
+
+        require(result, "Transfer failed");
+
+        emit Staked(msg.sender, tokenClass, amount);
     }
 
-    function withdraw(uint256 amount) public override nonReentrant updateReward(msg.sender) {
+    function withdraw(uint256 amount, uint256 tokenClass) public override nonReentrant updateReward(msg.sender) {
         require(amount > 0, "Cannot withdraw 0");
-        _totalSupply = _totalSupply.sub(amount);
-        _balances[msg.sender] = _balances[msg.sender].sub(amount);
-        stakingToken.safeTransfer(msg.sender, amount);
-        emit Withdrawn(msg.sender, amount);
+        require(tokenClass > 0 && tokenClass < 5, "Token class must be between 1 and 4");
+
+        uint256 weightedAmount = amount.mul(WEIGHTS[tokenClass - 1]);
+        totalSupply = totalSupply.sub(amount);
+        _weightedTotalSupply = _weightedTotalSupply.sub(weightedAmount);
+        _weightedBalance[msg.sender] = _weightedBalance[msg.sender].sub(weightedAmount);
+        _balances[msg.sender][tokenClass - 1] = _balances[msg.sender][tokenClass - 1].sub(amount);
+
+        bool result = stakingToken.transfer(address(this), msg.sender, tokenClass, amount);
+
+        require(result, "Transfer failed");
+
+        emit Withdrawn(msg.sender, tokenClass, amount);
     }
 
     function getReward() public override nonReentrant updateReward(msg.sender) {
         uint256 reward = rewards[msg.sender];
         if (reward > 0) {
             rewards[msg.sender] = 0;
-            rewardsToken.safeTransfer(msg.sender, reward);
+            rewardsToken.transfer(msg.sender, reward);
             emit RewardPaid(msg.sender, reward);
         }
     }
 
     function exit() external override {
-        withdraw(_balances[msg.sender]);
+        for (uint i = 0; i < 4; i++)
+        {
+            if (_balances[msg.sender][i] > 0)
+            {
+                withdraw(_balances[msg.sender][i], i + 1);
+            }
+        }
+        
         getReward();
     }
 
@@ -144,7 +171,7 @@ contract StakingRewards is IStakingRewards, RewardsDistributionRecipient, Reentr
     // Added to support recovering LP Rewards from other systems such as BAL to be distributed to holders
     function recoverERC20(address tokenAddress, uint256 tokenAmount) external onlyOwner {
         require(tokenAddress != address(stakingToken), "Cannot withdraw the staking token");
-        IERC20(tokenAddress).safeTransfer(owner, tokenAmount);
+        IERC20(tokenAddress).transfer(owner, tokenAmount);
         emit Recovered(tokenAddress, tokenAmount);
     }
 
@@ -172,8 +199,8 @@ contract StakingRewards is IStakingRewards, RewardsDistributionRecipient, Reentr
     /* ========== EVENTS ========== */
 
     event RewardAdded(uint256 reward);
-    event Staked(address indexed user, uint256 amount);
-    event Withdrawn(address indexed user, uint256 amount);
+    event Staked(address indexed user, uint tokenClass, uint256 amount);
+    event Withdrawn(address indexed user, uint tokenClass, uint256 amount);
     event RewardPaid(address indexed user, uint256 reward);
     event RewardsDurationUpdated(uint256 newDuration);
     event Recovered(address token, uint256 amount);
